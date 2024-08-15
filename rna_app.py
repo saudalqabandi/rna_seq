@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
-    QLabel, QPushButton, QSizePolicy, QTabWidget,
-    QTableWidget, QTableWidgetItem, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout,
+    QHeaderView, QLabel, QPushButton, QSizePolicy,
+    QTabWidget, QTableWidget, QTableWidgetItem, QWidget)
 
 class Ui_rna_app(object):
     def setupUi(self, rna_app):
@@ -70,23 +70,65 @@ class Ui_rna_app(object):
         self.metadata_tbl.setHorizontalHeaderItem(1, __qtablewidgetitem1)
         self.metadata_tbl.setObjectName(u"metadata_tbl")
         self.metadata_tbl.setGeometry(QRect(10, 40, 541, 151))
-        self.widget = QWidget(self.metadata_frame)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(120, 210, 301, 26))
-        self.horizontalLayout_2 = QHBoxLayout(self.widget)
+        self.layoutWidget = QWidget(self.metadata_frame)
+        self.layoutWidget.setObjectName(u"layoutWidget")
+        self.layoutWidget.setGeometry(QRect(120, 210, 301, 26))
+        self.horizontalLayout_2 = QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.load_metada_btn = QPushButton(self.widget)
+        self.load_metada_btn = QPushButton(self.layoutWidget)
         self.load_metada_btn.setObjectName(u"load_metada_btn")
 
         self.horizontalLayout_2.addWidget(self.load_metada_btn)
 
-        self.save_metadata_btn = QPushButton(self.widget)
+        self.save_metadata_btn = QPushButton(self.layoutWidget)
         self.save_metadata_btn.setObjectName(u"save_metadata_btn")
 
         self.horizontalLayout_2.addWidget(self.save_metadata_btn)
 
         self.tabWidget.addTab(self.metadata_tab, "")
+        self.de_tab = QWidget()
+        self.de_tab.setObjectName(u"de_tab")
+        self.de_frame = QFrame(self.de_tab)
+        self.de_frame.setObjectName(u"de_frame")
+        self.de_frame.setGeometry(QRect(280, 10, 272, 244))
+        self.de_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.de_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.de_frame_lbl = QLabel(self.de_frame)
+        self.de_frame_lbl.setObjectName(u"de_frame_lbl")
+        self.de_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
+        self.de_frame_lbl.setFont(font)
+        self.de_btn = QPushButton(self.de_frame)
+        self.de_btn.setObjectName(u"de_btn")
+        self.de_btn.setGeometry(QRect(10, 50, 231, 41))
+        self.de_status_llbl = QLabel(self.de_frame)
+        self.de_status_llbl.setObjectName(u"de_status_llbl")
+        self.de_status_llbl.setGeometry(QRect(10, 100, 231, 16))
+        self.batch_frame = QFrame(self.de_tab)
+        self.batch_frame.setObjectName(u"batch_frame")
+        self.batch_frame.setGeometry(QRect(0, 10, 272, 244))
+        self.batch_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.batch_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.batch_frame_lbl = QLabel(self.batch_frame)
+        self.batch_frame_lbl.setObjectName(u"batch_frame_lbl")
+        self.batch_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
+        self.batch_frame_lbl.setFont(font)
+        self.condition1_combo = QComboBox(self.batch_frame)
+        self.condition1_combo.setObjectName(u"condition1_combo")
+        self.condition1_combo.setGeometry(QRect(20, 60, 221, 22))
+        self.condition1_lbl = QLabel(self.batch_frame)
+        self.condition1_lbl.setObjectName(u"condition1_lbl")
+        self.condition1_lbl.setGeometry(QRect(20, 40, 121, 16))
+        self.condition2_lbl = QLabel(self.batch_frame)
+        self.condition2_lbl.setObjectName(u"condition2_lbl")
+        self.condition2_lbl.setGeometry(QRect(20, 100, 121, 16))
+        self.condition2_combo = QComboBox(self.batch_frame)
+        self.condition2_combo.setObjectName(u"condition2_combo")
+        self.condition2_combo.setGeometry(QRect(20, 120, 221, 22))
+        self.batch_err_lbl = QLabel(self.batch_frame)
+        self.batch_err_lbl.setObjectName(u"batch_err_lbl")
+        self.batch_err_lbl.setGeometry(QRect(20, 160, 221, 16))
+        self.tabWidget.addTab(self.de_tab, "")
 
         self.horizontalLayout.addWidget(self.tabWidget)
 
@@ -113,5 +155,13 @@ class Ui_rna_app(object):
         self.load_metada_btn.setText(QCoreApplication.translate("rna_app", u"Load", None))
         self.save_metadata_btn.setText(QCoreApplication.translate("rna_app", u"Save", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.metadata_tab), QCoreApplication.translate("rna_app", u"Metadata", None))
+        self.de_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Differential Expression", None))
+        self.de_btn.setText(QCoreApplication.translate("rna_app", u"Run DE", None))
+        self.de_status_llbl.setText("")
+        self.batch_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Batch", None))
+        self.condition1_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 1:", None))
+        self.condition2_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 2:", None))
+        self.batch_err_lbl.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.de_tab), QCoreApplication.translate("rna_app", u"DE", None))
     # retranslateUi
 
