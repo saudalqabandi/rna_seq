@@ -1,5 +1,17 @@
 #!/bin/bash
 ./build
 echo "Running app..."
-python app.py
+if [ $# -eq 0 ]; then
+    echo "No arguments provided."
+    exit 1
+fi
+
+if [ "$1" = "rna" ]; then
+    python app.py
+fi
+
+if [ "$1" = "plot" ]; then
+    python plotter.py
+fi
+
 

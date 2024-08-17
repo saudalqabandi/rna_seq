@@ -6,6 +6,8 @@ import pandas as pd
 from pydeseq2.dds import DeseqDataSet
 from pydeseq2.ds import DeseqStats
 import time
+import pickle
+from plot_app import Ui_plotter
 
 
 class MainWindow(QtWidgets.QWidget, Ui_rna_app):
@@ -15,6 +17,7 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
 
         self.load_btn.clicked.connect(self.load_data)
         self.counts = None
+        self.file_name = None
 
         self.load_metada_btn.clicked.connect(self.load_metadata)
         self.save_metadata_btn.clicked.connect(self.save_metadata)
@@ -27,12 +30,18 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         self.condition2 = None
 
         self.de_btn.clicked.connect(self.run_de)
+        self.plt_load_btn.clicked.connect(self.load_de)
+
+        self.dds = None
+        self.stats = None
 
     def load_data(self):
         file_dialog = QFileDialog(self)
         file_path, _ = file_dialog.getOpenFileName(
             self, "Open File", "", "CSV Files (*.csv)"
         )
+        self.file_name = file_path.split("/")[-1].replace(".csv", "")
+
         if file_path:
             self.selected_lbl.setText("Selected file: " + file_path.split("/")[-1])
             self.counts = pd.read_csv(file_path, index_col=0)
@@ -86,7 +95,7 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             self.metadata.to_csv(file_path, index=False)
 
     def on_tab_clicked(self, index):
-        if index == 2:
+        if index == 1:
             conditions = self.metadata["Condition"].unique()
 
             self.condition1_combo.clear()
@@ -111,8 +120,8 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             self.de_btn.setDisabled(False)
 
     def run_de(self):
-        self.de_status_llbl.setText("Running DE analysis")
-        self.de_status_llbl.repaint()
+        self.de_status_lbl.setText("Running DE analysis")
+        self.de_status_lbl.repaint()
 
         metadata = self.metadata[
             (self.metadata["Condition"] == self.condition1)
@@ -123,8 +132,6 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         batch = self.counts.T
         batch = batch.loc[metadata.index]
 
-        print(self.condition1, self.condition2)
-
         start_time = time.time()
         dds = DeseqDataSet(
             counts=batch, metadata=metadata, design_factors=["Condition"]
@@ -133,14 +140,55 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         stats = DeseqStats(
             dds, contrast=["Condition", self.condition1, self.condition2]
         )
+        stats.summary()
 
         end_time = time.time()
         execution_time = end_time - start_time
 
-        self.de_status_llbl.setText(
+        self.de_status_lbl.setText(
             f"DE analysis completed in {execution_time:.2f} seconds"
         )
-        print(stats.summary())
+
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getSaveFileName(
+            self, "Save File", "", "Pickle Files (*.pkl)"
+        )
+
+        if file_path:
+            with open(file_path, "wb") as f:
+                pickle.dump(dds, f)
+
+            if self.de_save_csv.isChecked():
+                file_path = file_path.replace(".pkl", ".csv")
+                stats.results_df.to_csv(file_path)
+
+        self.plt_load_lbl.setText(
+            f"Loaded: {file_path.split('/')[-1].replace('.pkl', '')}"
+        )
+
+    def load_de(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open File", "", "Pickle Files (*.pkl)"
+        )
+
+        with open(file_path, "rb") as f:
+            dds = pickle.load(f)
+
+        try:
+            self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"))
+        except FileNotFoundError:
+            stats = DeseqStats(
+                dds, contrast=["Condition", self.condition1, self.condition2]
+            )
+            stats.summary()
+            self.stats = stats.results_df()
+
+        self.dds = dds
+
+        self.plt_load_lbl.setText(
+            f"Loaded: {file_path.split('/')[-1].replace('.pkl', '')}"
+        )
 
 
 if __name__ == "__main__":
