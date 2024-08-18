@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="documentMode">
     <bool>true</bool>
@@ -186,7 +186,7 @@
     <widget class="QFrame" name="plot_frame">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>30</x>
        <y>60</y>
        <width>801</width>
        <height>361</height>

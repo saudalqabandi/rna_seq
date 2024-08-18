@@ -27,12 +27,19 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         self.canvas = Canvas(self.plot_frame)
         self.plot()
 
-        self.title_input.textChanged.connect(self.start_timer)
+        self.title_input.textChanged.connect(lambda: self.start_timer("title"))
+        self.xmin_input.textChanged.connect(lambda: self.start_timer("xmin"))
+        self.xmax_input.textChanged.connect(lambda: self.start_timer("xmax"))
+        self.ymin_input.textChanged.connect(lambda: self.start_timer("ymin"))
+        self.ymax_input.textChanged.connect(lambda: self.start_timer("ymax"))
+
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.update_plot)
+        self.updated_item = None
 
-    def start_timer(self):
+    def start_timer(self, item):
+        self.updated_item = item
         self.timer.start(500)
 
     def plot(self):
@@ -48,6 +55,7 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
             )
             self.canvas.title = self.title_input.text()
             self.canvas.volcano_plot(data=df)
+            self.canvas.draw()
 
     def load_data(self):
         file_dialog = QFileDialog(self)
@@ -71,7 +79,6 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         file_name = file_path.split("/")[-1].replace(".pkl", "")
         self.data_load_lbl.setText(f"Loaded: {file_name}")
 
-        self.canvas.title = file_name + " Volcano Plot"
         self.plot()
 
     def map_colour(self, df):
@@ -90,13 +97,30 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         return gtf
 
     def update_plot(self):
-        self.canvas.axes.set_title(self.title_input.text())
+        if self.updated_item == "title":
+            self.canvas.axes.set_title(self.title_input.text())
+        elif self.updated_item == "xmin":
+            self.canvas.axes.set_xlim(float(self.xmin_input.text()), None)
+        elif self.updated_item == "xmax":
+            self.canvas.axes.set_xlim(None, float(self.xmax_input.text()))
+        elif self.updated_item == "ymin":
+            self.canvas.axes.set_ylim(float(self.ymin_input.text()), None)
+        elif self.updated_item == "ymax":
+            self.canvas.axes.set_ylim(None, float(self.ymax_input.text()))
+
         self.canvas.draw()
+
 
 
 class Canvas(FigureCanvas):
     def __init__(self, parent):
-        fig, self.axes = plt.subplots(figsize=(7, 3), dpi=100)
+        self.dpi = 100
+        rect = tuple(parent.geometry().getRect())[-2:]
+        self.figsize = self.pxToInch(rect)
+        fig, self.axes = plt.subplots(figsize=self.figsize, dpi=self.dpi)
+        fig.tight_layout()
+        fig.subplots_adjust(top=0.9, bottom=0.2)
+
         super().__init__(fig)
         self.setParent(parent)
 
@@ -116,6 +140,9 @@ class Canvas(FigureCanvas):
         ax.axvline(1, zorder=0, c="k", lw=2, ls="--")
 
         ax.set_title(self.title)
+
+    def pxToInch(self, size):
+        return tuple([x / self.dpi for x in size])
 
 
 if __name__ == "__main__":
