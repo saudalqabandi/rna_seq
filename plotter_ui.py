@@ -97,7 +97,7 @@ class Ui_plotter(object):
 
         self.retranslateUi(plotter)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(plotter)

@@ -210,7 +210,7 @@
          <string>Run DE</string>
         </property>
        </widget>
-       <widget class="QLabel" name="de_status_llbl">
+       <widget class="QLabel" name="de_status_lbl">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -328,72 +328,6 @@
         </property>
         <property name="text">
          <string/>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="plt_tab">
-      <attribute name="title">
-       <string>Plot</string>
-      </attribute>
-      <widget class="QFrame" name="plt_frame">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>271</width>
-         <height>244</height>
-        </rect>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Shape::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Shadow::Raised</enum>
-       </property>
-       <widget class="QLabel" name="plt_frame_lbl">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>231</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Plot</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="plt_load_lbl">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>80</y>
-          <width>231</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="plt_load_btn">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>30</y>
-          <width>231</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Load DE</string>
         </property>
        </widget>
       </widget>

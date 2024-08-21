@@ -1,5 +1,6 @@
 import sys
 from PySide6 import QtWidgets
+from PySide6.QtCore import QThread, Signal, Slot
 from PySide6.QtWidgets import QFileDialog
 from rna_app import Ui_rna_app
 import pandas as pd
@@ -11,6 +12,8 @@ from plot_app import Ui_plotter
 
 
 class MainWindow(QtWidgets.QWidget, Ui_rna_app):
+    update_status_signal = Signal(str)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -30,10 +33,11 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         self.condition2 = None
 
         self.de_btn.clicked.connect(self.run_de)
-        self.plt_load_btn.clicked.connect(self.load_de)
 
         self.dds = None
         self.stats = None
+
+        self.update_status_signal.connect(self.update_status)
 
     def load_data(self):
         file_dialog = QFileDialog(self)
@@ -62,7 +66,6 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             self, "Open File", "", "CSV Files (*.csv)"
         )
         if file_path:
-            self.selected_lbl.setText("Selected file: " + file_path.split("/")[-1])
             self.metadata = pd.read_csv(file_path)
 
             self.metadata_tbl.setRowCount(0)
@@ -79,7 +82,7 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
     def save_metadata(self):
         file_dialog = QFileDialog(self)
         file_path, _ = file_dialog.getSaveFileName(
-            self, "Save File", "", "CSV Files (*.csv)"
+            self, "Save File", f"{self.file_name}_metadata", "CSV Files (*.csv)"
         )
 
         if self.metadata_tbl.rowCount() > 0:
@@ -120,8 +123,24 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             self.de_btn.setDisabled(False)
 
     def run_de(self):
-        self.de_status_lbl.setText("Running DE analysis")
-        self.de_status_lbl.repaint()
+        self.de_status_lbl.setText("Starting DE analysis")
+        self.de_status_lbl.update()
+        self.condition1_combo.setDisabled(True)
+        self.condition2_combo.setDisabled(True)
+
+        current_index = self.tabWidget.currentIndex()
+        for i in range(self.tabWidget.count()):
+            if i != current_index:
+                self.tabWidget.setTabEnabled(i, False)
+
+        self.thread = QThread()
+        self.thread.run = self.differential_expression_analysis
+
+        self.thread.finished.connect(self.on_analysis_complete)
+        self.thread.start()
+
+    def differential_expression_analysis(self):
+        self.update_status_signal.emit("Running DE analysis")
 
         metadata = self.metadata[
             (self.metadata["Condition"] == self.condition1)
@@ -136,35 +155,52 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         dds = DeseqDataSet(
             counts=batch, metadata=metadata, design_factors=["Condition"]
         )
-        dds.deseq2()
+        dds.deseq2(fit_type="mean")
         stats = DeseqStats(
             dds, contrast=["Condition", self.condition1, self.condition2]
         )
         stats.summary()
 
+        self.dds = dds
+        self.stats = stats
+
         end_time = time.time()
         execution_time = end_time - start_time
 
-        self.de_status_lbl.setText(
+        self.update_status_signal.emit(
             f"DE analysis completed in {execution_time:.2f} seconds"
         )
 
+    @Slot(str)
+    def update_status(self, message):
+        self.de_status_lbl.setText(message)
+        self.de_status_lbl.update()
+
+    def on_analysis_complete(self):
+        for i in range(self.tabWidget.count()):
+            self.tabWidget.setTabEnabled(i, True)
+
+        self.condition1_combo.setDisabled(False)
+        self.condition2_combo.setDisabled(False)
+
+        self.thread.wait()
+        self.thread.deleteLater()
+
         file_dialog = QFileDialog(self)
         file_path, _ = file_dialog.getSaveFileName(
-            self, "Save File", "", "Pickle Files (*.pkl)"
+            self,
+            "Save File",
+            f"{self.file_name}_{self.condition1.lower()}_{self.condition2.lower()}",
+            "Pickle Files (*.pkl)",
         )
 
         if file_path:
             with open(file_path, "wb") as f:
-                pickle.dump(dds, f)
+                pickle.dump(self.dds, f)
 
             if self.de_save_csv.isChecked():
                 file_path = file_path.replace(".pkl", ".csv")
-                stats.results_df.to_csv(file_path)
-
-        self.plt_load_lbl.setText(
-            f"Loaded: {file_path.split('/')[-1].replace('.pkl', '')}"
-        )
+                self.stats.results_df.to_csv(file_path)
 
     def load_de(self):
         file_dialog = QFileDialog(self)
@@ -185,10 +221,6 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             self.stats = stats.results_df()
 
         self.dds = dds
-
-        self.plt_load_lbl.setText(
-            f"Loaded: {file_path.split('/')[-1].replace('.pkl', '')}"
-        )
 
 
 if __name__ == "__main__":
