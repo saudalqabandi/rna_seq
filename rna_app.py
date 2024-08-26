@@ -1,174 +1,230 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'rna_app.ui'
-##
-## Created by: Qt User Interface Compiler version 6.7.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
-    QHBoxLayout, QHeaderView, QLabel, QPushButton,
-    QSizePolicy, QTabWidget, QTableWidget, QTableWidgetItem,
-    QWidget)
-
-class Ui_rna_app(object):
-    def setupUi(self, rna_app):
-        if not rna_app.objectName():
-            rna_app.setObjectName(u"rna_app")
-        rna_app.resize(606, 322)
-        self.horizontalLayout = QHBoxLayout(rna_app)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.tabWidget = QTabWidget(rna_app)
-        self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setDocumentMode(True)
-        self.data_tab = QWidget()
-        self.data_tab.setObjectName(u"data_tab")
-        self.horizontalLayout_4 = QHBoxLayout(self.data_tab)
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.data_frame = QFrame(self.data_tab)
-        self.data_frame.setObjectName(u"data_frame")
-        self.data_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.data_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.data_frame_lbl = QLabel(self.data_frame)
-        self.data_frame_lbl.setObjectName(u"data_frame_lbl")
-        self.data_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
-        font = QFont()
-        font.setPointSize(14)
-        font.setBold(True)
-        self.data_frame_lbl.setFont(font)
-        self.load_btn = QPushButton(self.data_frame)
-        self.load_btn.setObjectName(u"load_btn")
-        self.load_btn.setGeometry(QRect(10, 50, 231, 41))
-        self.selected_lbl = QLabel(self.data_frame)
-        self.selected_lbl.setObjectName(u"selected_lbl")
-        self.selected_lbl.setGeometry(QRect(10, 100, 231, 16))
-
-        self.horizontalLayout_4.addWidget(self.data_frame)
-
-        self.metadata_frame = QFrame(self.data_tab)
-        self.metadata_frame.setObjectName(u"metadata_frame")
-        self.metadata_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.metadata_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.metadata_lbl = QLabel(self.metadata_frame)
-        self.metadata_lbl.setObjectName(u"metadata_lbl")
-        self.metadata_lbl.setGeometry(QRect(10, 10, 231, 16))
-        self.metadata_lbl.setFont(font)
-        self.layoutWidget_2 = QWidget(self.metadata_frame)
-        self.layoutWidget_2.setObjectName(u"layoutWidget_2")
-        self.layoutWidget_2.setGeometry(QRect(10, 200, 251, 31))
-        self.horizontalLayout_3 = QHBoxLayout(self.layoutWidget_2)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.load_metada_btn = QPushButton(self.layoutWidget_2)
-        self.load_metada_btn.setObjectName(u"load_metada_btn")
-
-        self.horizontalLayout_3.addWidget(self.load_metada_btn)
-
-        self.save_metadata_btn = QPushButton(self.layoutWidget_2)
-        self.save_metadata_btn.setObjectName(u"save_metadata_btn")
-
-        self.horizontalLayout_3.addWidget(self.save_metadata_btn)
-
-        self.metadata_tbl = QTableWidget(self.metadata_frame)
-        if (self.metadata_tbl.columnCount() < 2):
-            self.metadata_tbl.setColumnCount(2)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.metadata_tbl.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.metadata_tbl.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        self.metadata_tbl.setObjectName(u"metadata_tbl")
-        self.metadata_tbl.setGeometry(QRect(10, 40, 251, 151))
-
-        self.horizontalLayout_4.addWidget(self.metadata_frame)
-
-        self.tabWidget.addTab(self.data_tab, "")
-        self.de_tab = QWidget()
-        self.de_tab.setObjectName(u"de_tab")
-        self.de_frame = QFrame(self.de_tab)
-        self.de_frame.setObjectName(u"de_frame")
-        self.de_frame.setGeometry(QRect(280, 10, 272, 244))
-        self.de_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.de_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.de_frame_lbl = QLabel(self.de_frame)
-        self.de_frame_lbl.setObjectName(u"de_frame_lbl")
-        self.de_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
-        self.de_frame_lbl.setFont(font)
-        self.de_btn = QPushButton(self.de_frame)
-        self.de_btn.setObjectName(u"de_btn")
-        self.de_btn.setGeometry(QRect(10, 80, 231, 41))
-        self.de_status_lbl = QLabel(self.de_frame)
-        self.de_status_lbl.setObjectName(u"de_status_lbl")
-        self.de_status_lbl.setGeometry(QRect(10, 130, 231, 16))
-        self.de_save_csv = QCheckBox(self.de_frame)
-        self.de_save_csv.setObjectName(u"de_save_csv")
-        self.de_save_csv.setGeometry(QRect(10, 50, 79, 20))
-        self.batch_frame = QFrame(self.de_tab)
-        self.batch_frame.setObjectName(u"batch_frame")
-        self.batch_frame.setGeometry(QRect(0, 10, 272, 244))
-        self.batch_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.batch_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.batch_frame_lbl = QLabel(self.batch_frame)
-        self.batch_frame_lbl.setObjectName(u"batch_frame_lbl")
-        self.batch_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
-        self.batch_frame_lbl.setFont(font)
-        self.condition1_combo = QComboBox(self.batch_frame)
-        self.condition1_combo.setObjectName(u"condition1_combo")
-        self.condition1_combo.setGeometry(QRect(20, 60, 221, 22))
-        self.condition1_lbl = QLabel(self.batch_frame)
-        self.condition1_lbl.setObjectName(u"condition1_lbl")
-        self.condition1_lbl.setGeometry(QRect(20, 40, 121, 16))
-        self.condition2_lbl = QLabel(self.batch_frame)
-        self.condition2_lbl.setObjectName(u"condition2_lbl")
-        self.condition2_lbl.setGeometry(QRect(20, 100, 121, 16))
-        self.condition2_combo = QComboBox(self.batch_frame)
-        self.condition2_combo.setObjectName(u"condition2_combo")
-        self.condition2_combo.setGeometry(QRect(20, 120, 221, 22))
-        self.batch_err_lbl = QLabel(self.batch_frame)
-        self.batch_err_lbl.setObjectName(u"batch_err_lbl")
-        self.batch_err_lbl.setGeometry(QRect(20, 160, 221, 16))
-        self.tabWidget.addTab(self.de_tab, "")
-
-        self.horizontalLayout.addWidget(self.tabWidget)
+import sys
+from PySide6 import QtWidgets
+from PySide6.QtCore import QThread, Signal, Slot
+from PySide6.QtWidgets import QFileDialog
+from rna_app_ui import Ui_rna_app
+import pandas as pd
+from pydeseq2.dds import DeseqDataSet
+from pydeseq2.ds import DeseqStats
+import time
+import pickle
+from plot_app import Ui_plotter
 
 
-        self.retranslateUi(rna_app)
+class MainWindow(QtWidgets.QWidget, Ui_rna_app):
+    update_status_signal = Signal(str)
 
-        self.tabWidget.setCurrentIndex(0)
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+        self.load_btn.clicked.connect(self.load_data)
+        self.counts = None
+        self.file_name = None
+
+        self.load_metada_btn.clicked.connect(self.load_metadata)
+        self.save_metadata_btn.clicked.connect(self.save_metadata)
+
+        self.tabWidget.tabBarClicked.connect(self.on_tab_clicked)
+
+        self.condition1_combo.currentIndexChanged.connect(self.check_conditions)
+        self.condition2_combo.currentIndexChanged.connect(self.check_conditions)
+        self.condition1 = None
+        self.condition2 = None
+
+        self.de_btn.clicked.connect(self.run_de)
+
+        self.dds = None
+        self.stats = None
+
+        self.update_status_signal.connect(self.update_status)
+
+    def load_data(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open File", "", "CSV Files (*.csv)"
+        )
+        self.file_name = file_path.split("/")[-1].replace(".csv", "")
+
+        if file_path:
+            self.selected_lbl.setText("Selected file: " + file_path.split("/")[-1])
+            self.counts = pd.read_csv(file_path, index_col=0)
+            self.counts.fillna(0, inplace=True)
+            self.counts = self.counts[self.counts.sum(axis=1) > 0]
+            self.counts = self.counts.astype(int)
+
+            for column in self.counts.columns:
+                row_count = self.metadata_tbl.rowCount()
+                self.metadata_tbl.insertRow(row_count)
+                self.metadata_tbl.setItem(
+                    row_count, 0, QtWidgets.QTableWidgetItem(column)
+                )
+
+    def load_metadata(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open File", "", "CSV Files (*.csv)"
+        )
+        if file_path:
+            self.metadata = pd.read_csv(file_path)
+
+            self.metadata_tbl.setRowCount(0)
+            for _, row in self.metadata.iterrows():
+                row_count = self.metadata_tbl.rowCount()
+                self.metadata_tbl.insertRow(row_count)
+                self.metadata_tbl.setItem(
+                    row_count, 0, QtWidgets.QTableWidgetItem(row["Sample"])
+                )
+                self.metadata_tbl.setItem(
+                    row_count, 1, QtWidgets.QTableWidgetItem(row["Condition"])
+                )
+
+    def save_metadata(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getSaveFileName(
+            self, "Save File", f"{self.file_name}_metadata", "CSV Files (*.csv)"
+        )
+
+        if self.metadata_tbl.rowCount() > 0:
+            self.metadata = pd.DataFrame()
+            for row in range(self.metadata_tbl.rowCount()):
+                for column in range(self.metadata_tbl.columnCount()):
+                    item = self.metadata_tbl.item(row, column)
+                    if item is not None:
+                        self.metadata.loc[row, column] = item.text()
+            self.metadata.columns = ["Sample", "Condition"]
+
+        if file_path:
+            self.metadata.to_csv(file_path, index=False)
+
+    def on_tab_clicked(self, index):
+        if index == 1:
+            conditions = self.metadata["Condition"].unique()
+
+            self.condition1_combo.clear()
+            self.condition2_combo.clear()
+
+            self.condition1_combo.addItems(conditions)
+            self.condition2_combo.addItems(conditions)
+
+    def check_conditions(self):
+        self.condition1 = self.condition1_combo.currentText()
+        self.condition2 = self.condition2_combo.currentText()
+
+        if self.condition1 == "" or self.condition2 == "":
+            self.batch_err_lbl.setText("Select conditions")
+            self.de_btn.setDisabled(True)
+
+        if self.condition1 == self.condition2:
+            self.batch_err_lbl.setText("Conditions must be different")
+            self.de_btn.setDisabled(True)
+        else:
+            self.batch_err_lbl.setText("")
+            self.de_btn.setDisabled(False)
+
+    def run_de(self):
+        self.de_status_lbl.setText("Starting DE analysis")
+        self.de_status_lbl.update()
+        self.condition1_combo.setDisabled(True)
+        self.condition2_combo.setDisabled(True)
+
+        current_index = self.tabWidget.currentIndex()
+        for i in range(self.tabWidget.count()):
+            if i != current_index:
+                self.tabWidget.setTabEnabled(i, False)
+
+        self.thread = QThread()
+        self.thread.run = self.differential_expression_analysis
+
+        self.thread.finished.connect(self.on_analysis_complete)
+        self.thread.start()
+
+    def differential_expression_analysis(self):
+        self.update_status_signal.emit("Running DE analysis")
+
+        metadata = self.metadata[
+            (self.metadata["Condition"] == self.condition1)
+            | (self.metadata["Condition"] == self.condition2)
+        ]
+        metadata = self.metadata.set_index("Sample")
+
+        batch = self.counts.T
+        batch = batch.loc[metadata.index]
+
+        start_time = time.time()
+        dds = DeseqDataSet(
+            counts=batch, metadata=metadata, design_factors=["Condition"]
+        )
+        dds.deseq2(fit_type="mean")
+        stats = DeseqStats(
+            dds, contrast=["Condition", self.condition1, self.condition2]
+        )
+        stats.summary()
+
+        self.dds = dds
+        self.stats = stats
+
+        end_time = time.time()
+        execution_time = end_time - start_time
+
+        self.update_status_signal.emit(
+            f"DE analysis completed in {execution_time:.2f} seconds"
+        )
+
+    @Slot(str)
+    def update_status(self, message):
+        self.de_status_lbl.setText(message)
+        self.de_status_lbl.update()
+
+    def on_analysis_complete(self):
+        for i in range(self.tabWidget.count()):
+            self.tabWidget.setTabEnabled(i, True)
+
+        self.condition1_combo.setDisabled(False)
+        self.condition2_combo.setDisabled(False)
+
+        self.thread.wait()
+        self.thread.deleteLater()
+
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getSaveFileName(
+            self,
+            "Save File",
+            f"{self.file_name}_{self.condition1.lower()}_{self.condition2.lower()}",
+            "Pickle Files (*.pkl)",
+        )
+
+        if file_path:
+            with open(file_path, "wb") as f:
+                pickle.dump(self.dds, f)
+
+            if self.de_save_csv.isChecked():
+                file_path = file_path.replace(".pkl", ".csv")
+                self.stats.results_df.to_csv(file_path)
+
+    def load_de(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open File", "", "Pickle Files (*.pkl)"
+        )
+
+        with open(file_path, "rb") as f:
+            dds = pickle.load(f)
+
+        try:
+            self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"))
+        except FileNotFoundError:
+            stats = DeseqStats(
+                dds, contrast=["Condition", self.condition1, self.condition2]
+            )
+            stats.summary()
+            self.stats = stats.results_df()
+
+        self.dds = dds
 
 
-        QMetaObject.connectSlotsByName(rna_app)
-    # setupUi
-
-    def retranslateUi(self, rna_app):
-        rna_app.setWindowTitle(QCoreApplication.translate("rna_app", u"RNA-Seq", None))
-        self.data_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Load counts file", None))
-        self.load_btn.setText(QCoreApplication.translate("rna_app", u"Load Data", None))
-        self.selected_lbl.setText(QCoreApplication.translate("rna_app", u"Selected file:", None))
-        self.metadata_lbl.setText(QCoreApplication.translate("rna_app", u"Metadata", None))
-        self.load_metada_btn.setText(QCoreApplication.translate("rna_app", u"Load", None))
-        self.save_metadata_btn.setText(QCoreApplication.translate("rna_app", u"Save", None))
-        ___qtablewidgetitem = self.metadata_tbl.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("rna_app", u"Sample", None));
-        ___qtablewidgetitem1 = self.metadata_tbl.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("rna_app", u"Condition", None));
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.data_tab), QCoreApplication.translate("rna_app", u"Data", None))
-        self.de_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Differential Expression", None))
-        self.de_btn.setText(QCoreApplication.translate("rna_app", u"Run DE", None))
-        self.de_status_lbl.setText("")
-        self.de_save_csv.setText(QCoreApplication.translate("rna_app", u"Save CSV", None))
-        self.batch_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Batch", None))
-        self.condition1_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 1:", None))
-        self.condition2_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 2:", None))
-        self.batch_err_lbl.setText("")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.de_tab), QCoreApplication.translate("rna_app", u"DE", None))
-    # retranslateUi
-
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())

@@ -1,124 +1,218 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'plotter.ui'
-##
-## Created by: Qt User Interface Compiler version 6.7.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QTabWidget,
-    QWidget)
-
-class Ui_plotter(object):
-    def setupUi(self, plotter):
-        if not plotter.objectName():
-            plotter.setObjectName(u"plotter")
-        plotter.resize(876, 544)
-        self.tabWidget = QTabWidget(plotter)
-        self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(0, 10, 861, 531))
-        self.tabWidget.setDocumentMode(True)
-        self.data_tab = QWidget()
-        self.data_tab.setObjectName(u"data_tab")
-        self.data_frame = QFrame(self.data_tab)
-        self.data_frame.setObjectName(u"data_frame")
-        self.data_frame.setGeometry(QRect(10, 40, 271, 241))
-        self.data_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.data_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.data_frame_lbl = QLabel(self.data_frame)
-        self.data_frame_lbl.setObjectName(u"data_frame_lbl")
-        self.data_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
-        font = QFont()
-        font.setPointSize(14)
-        font.setBold(True)
-        self.data_frame_lbl.setFont(font)
-        self.data_load_lbl = QLabel(self.data_frame)
-        self.data_load_lbl.setObjectName(u"data_load_lbl")
-        self.data_load_lbl.setGeometry(QRect(10, 80, 231, 16))
-        self.data_load_btn = QPushButton(self.data_frame)
-        self.data_load_btn.setObjectName(u"data_load_btn")
-        self.data_load_btn.setGeometry(QRect(10, 30, 231, 41))
-        self.tabWidget.addTab(self.data_tab, "")
-        self.plot_tab = QWidget()
-        self.plot_tab.setObjectName(u"plot_tab")
-        self.xmax_input = QLineEdit(self.plot_tab)
-        self.xmax_input.setObjectName(u"xmax_input")
-        self.xmax_input.setGeometry(QRect(70, 470, 51, 22))
-        self.ymax_lbl = QLabel(self.plot_tab)
-        self.ymax_lbl.setObjectName(u"ymax_lbl")
-        self.ymax_lbl.setGeometry(QRect(150, 470, 31, 20))
-        self.xmin_input = QLineEdit(self.plot_tab)
-        self.xmin_input.setObjectName(u"xmin_input")
-        self.xmin_input.setGeometry(QRect(70, 440, 51, 22))
-        self.plot_select_lbl = QLabel(self.plot_tab)
-        self.plot_select_lbl.setObjectName(u"plot_select_lbl")
-        self.plot_select_lbl.setGeometry(QRect(0, 0, 111, 16))
-        self.title_lbl = QLabel(self.plot_tab)
-        self.title_lbl.setObjectName(u"title_lbl")
-        self.title_lbl.setGeometry(QRect(250, 20, 31, 16))
-        self.title_input = QLineEdit(self.plot_tab)
-        self.title_input.setObjectName(u"title_input")
-        self.title_input.setGeometry(QRect(290, 20, 431, 22))
-        self.xmax_lbl = QLabel(self.plot_tab)
-        self.xmax_lbl.setObjectName(u"xmax_lbl")
-        self.xmax_lbl.setGeometry(QRect(30, 470, 31, 20))
-        self.plot_frame = QFrame(self.plot_tab)
-        self.plot_frame.setObjectName(u"plot_frame")
-        self.plot_frame.setGeometry(QRect(30, 60, 801, 361))
-        self.plot_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.plot_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.ymax_input = QLineEdit(self.plot_tab)
-        self.ymax_input.setObjectName(u"ymax_input")
-        self.ymax_input.setGeometry(QRect(190, 470, 51, 22))
-        self.ymin_lbl = QLabel(self.plot_tab)
-        self.ymin_lbl.setObjectName(u"ymin_lbl")
-        self.ymin_lbl.setGeometry(QRect(150, 440, 31, 20))
-        self.ymin_input = QLineEdit(self.plot_tab)
-        self.ymin_input.setObjectName(u"ymin_input")
-        self.ymin_input.setGeometry(QRect(190, 440, 51, 22))
-        self.plot_combo = QComboBox(self.plot_tab)
-        self.plot_combo.addItem("")
-        self.plot_combo.setObjectName(u"plot_combo")
-        self.plot_combo.setGeometry(QRect(0, 20, 181, 22))
-        self.xmin_lbl = QLabel(self.plot_tab)
-        self.xmin_lbl.setObjectName(u"xmin_lbl")
-        self.xmin_lbl.setGeometry(QRect(30, 440, 31, 20))
-        self.tabWidget.addTab(self.plot_tab, "")
-
-        self.retranslateUi(plotter)
-
-        self.tabWidget.setCurrentIndex(1)
+import sys
+import os
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import QFileDialog
+from PySide6.QtCore import QTimer
+from plot_app_ui import Ui_plotter
+from pydeseq2.ds import DeseqStats
+import pandas as pd
+import pickle
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import json
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.figure import Figure
+from adjustText import adjust_text
 
 
-        QMetaObject.connectSlotsByName(plotter)
-    # setupUi
+class MainWindow(QtWidgets.QWidget, Ui_plotter):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
 
-    def retranslateUi(self, plotter):
-        plotter.setWindowTitle(QCoreApplication.translate("plotter", u"Plotter", None))
-        self.data_frame_lbl.setText(QCoreApplication.translate("plotter", u"Data", None))
-        self.data_load_lbl.setText("")
-        self.data_load_btn.setText(QCoreApplication.translate("plotter", u"Load DE", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.data_tab), QCoreApplication.translate("plotter", u"Data", None))
-        self.xmax_input.setText("")
-        self.ymax_lbl.setText(QCoreApplication.translate("plotter", u"ymax:", None))
-        self.plot_select_lbl.setText(QCoreApplication.translate("plotter", u"Select plot:", None))
-        self.title_lbl.setText(QCoreApplication.translate("plotter", u"Title:", None))
-        self.xmax_lbl.setText(QCoreApplication.translate("plotter", u"xmax:", None))
-        self.ymax_input.setText("")
-        self.ymin_lbl.setText(QCoreApplication.translate("plotter", u"ymin:", None))
-        self.plot_combo.setItemText(0, QCoreApplication.translate("plotter", u"Volcano", None))
+        self.data_load_btn.clicked.connect(self.load_data)
+        self.dds = None
+        self.stats = None
+        self.gtf = self.get_annotations()
 
-        self.xmin_lbl.setText(QCoreApplication.translate("plotter", u"xmin:", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.plot_tab), QCoreApplication.translate("plotter", u"Plot", None))
-    # retranslateUi
+        self.canvas = Canvas(self.plot_frame)
 
+        self.update_btn.clicked.connect(self.update_plot)
+        self.timer = QTimer(self)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.update_plot)
+        self.updated_item = None
+
+        self.save_btn.clicked.connect(self.save_plot)
+
+    def start_timer(self, item):
+        self.updated_item = item
+        self.timer.start(500)
+
+    def plot(self):
+        if self.stats is None:
+            return
+
+        if self.plot_combo.currentText() == "Volcano":
+            df = self.stats
+            df["symbol"] = df.index.map(lambda x: self.gtf[x])
+            df["nlog10"] = -np.log10(df["padj"])
+            df["colour"] = df[["log2FoldChange", "nlog10"]].apply(
+                self.map_colour, axis=1
+            )
+            self.canvas.title = self.title_input.text()
+            self.canvas.data = df
+            self.canvas.volcano_plot()
+            self.canvas.draw()
+
+    def load_data(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getOpenFileName(
+            self, "Open File", "", "Pickle Files (*.pkl)"
+        )
+        file_name = file_path.split("/")[-1].replace(".pkl", "")
+
+        with open(file_path, "rb") as f:
+            dds = pickle.load(f)
+
+        if file_name + ".csv" in os.listdir(os.path.dirname(file_path)):
+            self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"), index_col=0)
+        else:
+            stats = DeseqStats(
+                dds, contrast=["Condition", self.condition1, self.condition2]
+            )
+            stats.summary()
+            self.stats = stats.results_df()
+
+        self.dds = dds
+        self.data_load_lbl.setText(f"Loaded: {file_name}")
+        self.stats["symbol"] = self.stats.index.map(lambda x: self.gtf[x])
+        self.plot()
+
+    def map_colour(self, df):
+        log2FoldChange, nlog10 = df
+
+        if abs(log2FoldChange) > 7 and nlog10 >= 3:
+            return "Highly Significant"
+        elif abs(log2FoldChange) > 1 and nlog10 >= 1.3:
+            return "Significant"
+        else:
+            return "Not Significant"
+
+    def get_annotations(self):
+        with open("gtf/gtf_gene_dict.json", "r") as f:
+            gtf = json.load(f)
+        return gtf
+
+    def update_plot(self):
+        if self.title_input.text():
+            self.canvas.axes.set_title(self.title_input.text())
+
+        if self.xmin_input.text():
+            self.canvas.axes.set_xlim(float(self.xmin_input.text()), None)
+
+        if self.xmax_input.text():
+            self.canvas.axes.set_xlim(None, float(self.xmax_input.text()))
+
+        if self.ymin_input.text():
+            self.canvas.axes.set_ylim(float(self.ymin_input.text()), None)
+
+        if self.ymax_input.text():
+            self.canvas.axes.set_ylim(None, float(self.ymax_input.text()))
+
+        self.canvas.draw()
+
+    def save_plot(self):
+        file_dialog = QFileDialog(self)
+        file_path, _ = file_dialog.getSaveFileName(
+            self,
+            "Save File",
+            self.title_input.text().replace(" ", "_"),
+            "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;PDF Files (*.pdf)",
+        )
+
+        if file_path:
+            self.canvas.fig.savefig(file_path)
+
+
+class Canvas(FigureCanvas):
+    def __init__(self, parent):
+        self.dpi = 100
+        rect = tuple(parent.geometry().getRect())[-2:]
+        self.figsize = self.pxToInch(rect)
+        self.fig, self.axes = plt.subplots(figsize=self.figsize, dpi=self.dpi)
+        self.fig.tight_layout()
+        self.fig.subplots_adjust(top=0.9, bottom=0.2)
+        self.data = None
+        super().__init__(self.fig)
+        self.setParent(parent)
+
+        self.mpl_connect("button_press_event", self.on_click)
+        self.texts = []
+
+    def volcano_plot(self):
+        ax = sns.scatterplot(
+            data=self.data,
+            x="log2FoldChange",
+            y="nlog10",
+            hue="colour",
+            hue_order=["Not Significant", "Significant", "Highly Significant"],
+            palette=["grey", "firebrick", "rebeccapurple"],
+            ax=self.axes,
+        )
+
+        ax.axhline(1.3, zorder=0, c="k", lw=2, ls="--")
+        ax.axvline(-1, zorder=0, c="k", lw=2, ls="--")
+        ax.axvline(1, zorder=0, c="k", lw=2, ls="--")
+
+        ax.set_title(self.title)
+
+    def pxToInch(self, size):
+        return tuple([x / self.dpi for x in size])
+
+    def on_click(self, event):
+        if event.inaxes:
+            x, y = event.xdata, event.ydata
+            if event.button == 1:  # Left click
+                closest_point = self.get_closest_point(x, y)
+                if closest_point is not None:
+                    self.add_label(closest_point)
+                    self.draw()
+            elif event.button == 3:  # Right click
+                self.remove_nearest_label(x, y)
+                self.draw()
+
+    def get_closest_point(self, x, y):
+        data_x = self.data["log2FoldChange"]
+        data_y = self.data["nlog10"]
+        distances = np.sqrt((data_x - x) ** 2 + (data_y - y) ** 2)
+        min_index = np.argmin(distances)
+
+        RADIUS = 0.5
+        if distances[min_index] <= RADIUS:
+            return data_x[min_index], data_y[min_index]
+        else:
+            return None
+
+    def add_label(self, point):
+        x, y = point
+        index = self.data[
+            (self.data["log2FoldChange"] == x) & (self.data["nlog10"] == y)
+        ].index
+        gene_symbol = self.data.loc[index, "symbol"].values[0]
+        text = self.axes.text(x + 0.02, y + 0.02, gene_symbol, fontsize=9, ha="left", va="bottom")
+        self.texts.append(text)
+        return text
+
+    def remove_nearest_label(self, x, y):
+        if not self.texts:
+            return
+
+        distances = []
+        for text in self.texts:
+            text_x, text_y = text.get_position()
+            distance = np.sqrt((text_x - x) ** 2 + (text_y - y) ** 2)
+            distances.append(distance)
+
+        min_distance = min(distances)
+        if min_distance <= 0.5:  # RADIUS
+            min_index = distances.index(min_distance)
+            self.texts[min_index].remove()
+            del self.texts[min_index]
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
