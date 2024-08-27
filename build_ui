@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Building ui..."
+pyside6-uic rna_app.ui -o rna_app_ui.py
+pyside6-uic plotter.ui -o plot_app_ui.py
+
+

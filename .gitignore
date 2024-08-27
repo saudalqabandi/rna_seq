@@ -1,2 +1,6 @@
 **/__pycache__
 counts
+test.ipynb
+build
+dist
+*.spec

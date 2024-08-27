@@ -1,5 +1,5 @@
 #!/bin/bash
-./build
+./build_ui
 echo "Running app..."
 if [ $# -eq 0 ]; then
     echo "No arguments provided."
