@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo "No arguments provided, building both"
+
+    python setup_rna.py build
+    mv build build_rna
+
+    python setup_plot.py build
+    mv build build_plot
+    
+fi
+
+if [ "$1" = "rna" ]; then
+    python setup_rna.py build
+    mv build build_rna
+fi
+
+if [ "$1" = "plot" ]; then
+    python setup_plot.py build
+    mv build build_plot
+fi

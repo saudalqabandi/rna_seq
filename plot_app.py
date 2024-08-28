@@ -10,10 +10,9 @@ import pickle
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-import json
+from gtf import get_annotations
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
-from adjustText import adjust_text
 
 
 class MainWindow(QtWidgets.QWidget, Ui_plotter):
@@ -24,8 +23,7 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         self.data_load_btn.clicked.connect(self.load_data)
         self.dds = None
         self.stats = None
-        self.gtf = self.get_annotations()
-
+        self.gtf = get_annotations()
         self.canvas = Canvas(self.plot_frame)
 
         self.update_btn.clicked.connect(self.update_plot)
@@ -89,11 +87,6 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
             return "Significant"
         else:
             return "Not Significant"
-
-    def get_annotations(self):
-        with open("gtf/gtf_gene_dict.json", "r") as f:
-            gtf = json.load(f)
-        return gtf
 
     def update_plot(self):
         if self.title_input.text():
@@ -191,7 +184,9 @@ class Canvas(FigureCanvas):
             (self.data["log2FoldChange"] == x) & (self.data["nlog10"] == y)
         ].index
         gene_symbol = self.data.loc[index, "symbol"].values[0]
-        text = self.axes.text(x + 0.02, y + 0.02, gene_symbol, fontsize=9, ha="left", va="bottom")
+        text = self.axes.text(
+            x + 0.02, y + 0.02, gene_symbol, fontsize=9, ha="left", va="bottom"
+        )
         self.texts.append(text)
         return text
 
@@ -210,6 +205,7 @@ class Canvas(FigureCanvas):
             min_index = distances.index(min_distance)
             self.texts[min_index].remove()
             del self.texts[min_index]
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

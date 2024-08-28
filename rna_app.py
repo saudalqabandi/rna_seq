@@ -9,6 +9,7 @@ from pydeseq2.ds import DeseqStats
 import time
 import pickle
 from plot_app import Ui_plotter
+import os
 
 
 class MainWindow(QtWidgets.QWidget, Ui_rna_app):
@@ -153,16 +154,11 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
 
         start_time = time.time()
         dds = DeseqDataSet(
-            counts=batch, metadata=metadata, design_factors=["Condition"]
+            counts=batch, metadata=metadata, design_factors=["Condition"], n_cpus=1
         )
-        dds.deseq2(fit_type="mean")
-        stats = DeseqStats(
-            dds, contrast=["Condition", self.condition1, self.condition2]
-        )
-        stats.summary()
 
+        dds.deseq2(fit_type="mean")
         self.dds = dds
-        self.stats = stats
 
         end_time = time.time()
         execution_time = end_time - start_time
@@ -198,29 +194,9 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             with open(file_path, "wb") as f:
                 pickle.dump(self.dds, f)
 
-            if self.de_save_csv.isChecked():
-                file_path = file_path.replace(".pkl", ".csv")
-                self.stats.results_df.to_csv(file_path)
-
-    def load_de(self):
-        file_dialog = QFileDialog(self)
-        file_path, _ = file_dialog.getOpenFileName(
-            self, "Open File", "", "Pickle Files (*.pkl)"
-        )
-
-        with open(file_path, "rb") as f:
-            dds = pickle.load(f)
-
-        try:
-            self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"))
-        except FileNotFoundError:
-            stats = DeseqStats(
-                dds, contrast=["Condition", self.condition1, self.condition2]
-            )
-            stats.summary()
-            self.stats = stats.results_df()
-
-        self.dds = dds
+            # if self.de_save_csv.isChecked():
+            #     file_path = file_path.replace(".pkl", ".csv")
+            #     self.stats.results_df.to_csv(file_path)
 
 
 if __name__ == "__main__":
