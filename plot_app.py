@@ -34,11 +34,19 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
 
         self.save_btn.clicked.connect(self.save_plot)
 
-    def start_timer(self, item):
-        self.updated_item = item
-        self.timer.start(500)
+        self.plot_combo.currentIndexChanged.connect(self.plot)
 
     def plot(self):
+        self.canvas.axes.clear()
+
+        if hasattr(self.canvas, "colorbar") and self.canvas.colorbar is not None:
+            try:
+                self.canvas.colorbar.remove()
+            except AttributeError:
+                print("No colorbar to remove")
+            self.canvas.colorbar = None
+
+        self.canvas.draw()
         if self.stats is None:
             return
 
@@ -54,6 +62,28 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
             self.canvas.volcano_plot()
             self.canvas.draw()
 
+        if self.plot_combo.currentText() == "Heatmap":
+            sigs = self.stats[self.stats["padj"] < 0.05]
+            if sigs.empty:
+                self.canvas.no_sig_genes()
+                self.canvas.draw()
+                return
+            self.dds.layers["log1p"] = np.log1p(self.dds.layers["normed_counts"])
+
+            dds_sigs = self.dds[:, sigs.index]
+
+            graph_data = pd.DataFrame(
+                dds_sigs.layers["log1p"].T,
+                index=dds_sigs.var_names,
+                columns=dds_sigs.obs_names,
+            )
+
+            graph_data.index = graph_data.index.map(self.gtf)
+            self.canvas.title = self.title_input.text()
+            self.canvas.data = graph_data
+            self.canvas.heatmap_plot()
+            self.canvas.draw()
+
     def load_data(self):
         file_dialog = QFileDialog(self)
         file_path, _ = file_dialog.getOpenFileName(
@@ -67,16 +97,14 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         if file_name + ".csv" in os.listdir(os.path.dirname(file_path)):
             self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"), index_col=0)
         else:
-            stats = DeseqStats(
-                dds, contrast=["Condition", self.condition1, self.condition2]
-            )
+            stats = DeseqStats(dds)
             stats.summary()
-            self.stats = stats.results_df()
+            self.data_load_lbl.setText("Running Wald Test")
+            self.stats = stats.results_df
 
         self.dds = dds
         self.data_load_lbl.setText(f"Loaded: {file_name}")
         self.stats["symbol"] = self.stats.index.map(lambda x: self.gtf[x])
-        self.plot()
 
     def map_colour(self, df):
         log2FoldChange, nlog10 = df
@@ -117,6 +145,7 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
 
         if file_path:
             self.canvas.fig.savefig(file_path)
+            self.stats.to_csv(file_path.replace(".png", ".csv"))
 
 
 class Canvas(FigureCanvas):
@@ -125,16 +154,15 @@ class Canvas(FigureCanvas):
         rect = tuple(parent.geometry().getRect())[-2:]
         self.figsize = self.pxToInch(rect)
         self.fig, self.axes = plt.subplots(figsize=self.figsize, dpi=self.dpi)
-        self.fig.tight_layout()
-        self.fig.subplots_adjust(top=0.9, bottom=0.2)
         self.data = None
+        self.colorbar = None
         super().__init__(self.fig)
         self.setParent(parent)
 
-        self.mpl_connect("button_press_event", self.on_click)
         self.texts = []
 
     def volcano_plot(self):
+        self.axes.clear()
         ax = sns.scatterplot(
             data=self.data,
             x="log2FoldChange",
@@ -149,7 +177,33 @@ class Canvas(FigureCanvas):
         ax.axvline(-1, zorder=0, c="k", lw=2, ls="--")
         ax.axvline(1, zorder=0, c="k", lw=2, ls="--")
 
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+        
         ax.set_title(self.title)
+        self.fig.tight_layout()
+
+        self.mpl_connect("button_press_event", self.on_click)
+
+    def heatmap_plot(self):
+        self.axes.clear()
+        ax = sns.heatmap(data=self.data, ax=self.axes)
+        self.colorbar = ax.collections[0].colorbar
+        self.colorbar.set_label("log1p(normed_counts)")
+        ax.set_xlim(0, self.data.shape[1])
+        ax.set_ylim(0, self.data.shape[0])
+
+        self.fig.tight_layout(rect=[0, 0, 1, 0.95])
+
+    def no_sig_genes(self):
+        self.axes.text(
+            0.5,
+            0.5,
+            "No significant genes found",
+            fontsize=12,
+            ha="center",
+            va="center",
+        )
 
     def pxToInch(self, size):
         return tuple([x / self.dpi for x in size])

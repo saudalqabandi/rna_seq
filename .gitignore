@@ -3,6 +3,7 @@ counts
 test.ipynb
 gtf
 build*
-dist
+dist*
 *.spec
-
+DEA.zip
+dds_plots.py

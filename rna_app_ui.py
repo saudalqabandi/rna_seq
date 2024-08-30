@@ -15,16 +15,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
-    QHBoxLayout, QHeaderView, QLabel, QPushButton,
-    QSizePolicy, QTabWidget, QTableWidget, QTableWidgetItem,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout,
+    QHeaderView, QLabel, QPushButton, QSizePolicy,
+    QTabWidget, QTableWidget, QTableWidgetItem, QWidget)
 
 class Ui_rna_app(object):
     def setupUi(self, rna_app):
         if not rna_app.objectName():
             rna_app.setObjectName(u"rna_app")
-        rna_app.resize(606, 322)
+        rna_app.resize(576, 322)
         self.horizontalLayout = QHBoxLayout(rna_app)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.tabWidget = QTabWidget(rna_app)
@@ -100,17 +99,14 @@ class Ui_rna_app(object):
         self.de_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.de_frame_lbl = QLabel(self.de_frame)
         self.de_frame_lbl.setObjectName(u"de_frame_lbl")
-        self.de_frame_lbl.setGeometry(QRect(10, 10, 231, 16))
+        self.de_frame_lbl.setGeometry(QRect(10, 0, 231, 31))
         self.de_frame_lbl.setFont(font)
         self.de_btn = QPushButton(self.de_frame)
         self.de_btn.setObjectName(u"de_btn")
-        self.de_btn.setGeometry(QRect(10, 80, 231, 41))
+        self.de_btn.setGeometry(QRect(10, 50, 251, 41))
         self.de_status_lbl = QLabel(self.de_frame)
         self.de_status_lbl.setObjectName(u"de_status_lbl")
-        self.de_status_lbl.setGeometry(QRect(10, 130, 231, 16))
-        self.de_save_csv = QCheckBox(self.de_frame)
-        self.de_save_csv.setObjectName(u"de_save_csv")
-        self.de_save_csv.setGeometry(QRect(10, 50, 79, 20))
+        self.de_status_lbl.setGeometry(QRect(20, 90, 231, 16))
         self.batch_frame = QFrame(self.de_tab)
         self.batch_frame.setObjectName(u"batch_frame")
         self.batch_frame.setGeometry(QRect(0, 10, 272, 244))
@@ -164,7 +160,6 @@ class Ui_rna_app(object):
         self.de_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Differential Expression", None))
         self.de_btn.setText(QCoreApplication.translate("rna_app", u"Run DE", None))
         self.de_status_lbl.setText("")
-        self.de_save_csv.setText(QCoreApplication.translate("rna_app", u"Save CSV", None))
         self.batch_frame_lbl.setText(QCoreApplication.translate("rna_app", u"Batch", None))
         self.condition1_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 1:", None))
         self.condition2_lbl.setText(QCoreApplication.translate("rna_app", u"Condition 2:", None))

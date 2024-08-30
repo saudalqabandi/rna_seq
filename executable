@@ -3,20 +3,16 @@
 if [ $# -eq 0 ]; then
     echo "No arguments provided, building both"
 
-    python setup_rna.py build
-    mv build build_rna
+    pyinstaller rna_app.py --onedir --clean --noconfirm --log-level WARN -w --distpath dist_rna --workpath build_rna
+    pyinstaller plot_app.py --onedir --clean --noconfirm --log-level WARN -w --distpath dist_plot --workpath build_plot
 
-    python setup_plot.py build
-    mv build build_plot
     
 fi
 
 if [ "$1" = "rna" ]; then
-    python setup_rna.py build
-    mv build build_rna
+    pyinstaller rna_app.py --onedir --clean --noconfirm --log-level WARN -w --distpath dist_rna --workpath build_rna
 fi
 
 if [ "$1" = "plot" ]; then
-    python setup_plot.py build
-    mv build build_plot
+    pyinstaller plot_app.py --onedir --clean --noconfirm --log-level WARN -w --distpath dist_plot --workpath build_plot
 fi

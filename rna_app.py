@@ -8,7 +8,6 @@ from pydeseq2.dds import DeseqDataSet
 from pydeseq2.ds import DeseqStats
 import time
 import pickle
-from plot_app import Ui_plotter
 import os
 
 
@@ -140,6 +139,13 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         self.thread.finished.connect(self.on_analysis_complete)
         self.thread.start()
 
+    def deseq2(self, batch, metadata):
+        dds = DeseqDataSet(
+            counts=batch, metadata=metadata, design_factors=["Condition"], n_cpus=1
+        )
+        dds.deseq2(fit_type="mean")
+        return dds
+
     def differential_expression_analysis(self):
         self.update_status_signal.emit("Running DE analysis")
 
@@ -153,13 +159,8 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
         batch = batch.loc[metadata.index]
 
         start_time = time.time()
-        dds = DeseqDataSet(
-            counts=batch, metadata=metadata, design_factors=["Condition"], n_cpus=1
-        )
 
-        dds.deseq2(fit_type="mean")
-        self.dds = dds
-
+        self.dds = self.deseq2(batch, metadata)
         end_time = time.time()
         execution_time = end_time - start_time
 
@@ -194,13 +195,16 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             with open(file_path, "wb") as f:
                 pickle.dump(self.dds, f)
 
-            # if self.de_save_csv.isChecked():
-            #     file_path = file_path.replace(".pkl", ".csv")
-            #     self.stats.results_df.to_csv(file_path)
+        self.de_save_btn.setDisabled(False)
 
 
-if __name__ == "__main__":
+
+def main():
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()

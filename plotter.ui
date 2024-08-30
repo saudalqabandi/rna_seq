@@ -236,6 +236,9 @@
      </property>
     </widget>
     <widget class="QComboBox" name="plot_combo">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -244,9 +247,20 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
      <item>
       <property name="text">
        <string>Volcano</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Heatmap</string>
       </property>
      </item>
     </widget>
