@@ -11,6 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from gtf import get_annotations
+from custom_inference import CustomInference
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 
@@ -97,7 +98,7 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
         if file_name + ".csv" in os.listdir(os.path.dirname(file_path)):
             self.stats = pd.read_csv(file_path.replace(".pkl", ".csv"), index_col=0)
         else:
-            stats = DeseqStats(dds)
+            stats = DeseqStats(dds, inference=CustomInference(backend="threading"))
             stats.summary()
             self.data_load_lbl.setText("Running Wald Test")
             self.stats = stats.results_df
@@ -145,7 +146,7 @@ class MainWindow(QtWidgets.QWidget, Ui_plotter):
 
         if file_path:
             self.canvas.fig.savefig(file_path)
-            self.stats.to_csv(file_path.replace(".png", ".csv"))
+            self.canvas.data.to_csv(file_path.rsplit(".", 1)[0] + ".csv")
 
 
 class Canvas(FigureCanvas):
@@ -179,7 +180,7 @@ class Canvas(FigureCanvas):
 
         for spine in ax.spines.values():
             spine.set_visible(True)
-        
+
         ax.set_title(self.title)
         self.fig.tight_layout()
 
@@ -187,7 +188,7 @@ class Canvas(FigureCanvas):
 
     def heatmap_plot(self):
         self.axes.clear()
-        ax = sns.heatmap(data=self.data, ax=self.axes)
+        ax = sns.heatmap(data=self.data, ax=self.axes,cbar_kws={'label': 'log1p(normed_counts)'})
         self.colorbar = ax.collections[0].colorbar
         self.colorbar.set_label("log1p(normed_counts)")
         ax.set_xlim(0, self.data.shape[1])

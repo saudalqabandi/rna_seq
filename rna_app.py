@@ -8,7 +8,7 @@ from pydeseq2.dds import DeseqDataSet
 from pydeseq2.ds import DeseqStats
 import time
 import pickle
-import os
+from custom_inference import CustomInference
 
 
 class MainWindow(QtWidgets.QWidget, Ui_rna_app):
@@ -141,7 +141,10 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
 
     def deseq2(self, batch, metadata):
         dds = DeseqDataSet(
-            counts=batch, metadata=metadata, design_factors=["Condition"], n_cpus=1
+            counts=batch,
+            metadata=metadata,
+            design_factors=["Condition"],
+            inference=CustomInference(backend="threading"),
         )
         dds.deseq2(fit_type="mean")
         return dds
@@ -168,7 +171,6 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             f"DE analysis completed in {execution_time:.2f} seconds"
         )
 
-    @Slot(str)
     def update_status(self, message):
         self.de_status_lbl.setText(message)
         self.de_status_lbl.update()
@@ -195,8 +197,11 @@ class MainWindow(QtWidgets.QWidget, Ui_rna_app):
             with open(file_path, "wb") as f:
                 pickle.dump(self.dds, f)
 
-        self.de_save_btn.setDisabled(False)
-
+        self.stats = DeseqStats(
+            self.dds, inference=CustomInference(backend="threading")
+        )
+        self.stats.summary()
+        self.stats.results_df.to_csv(f"{file_path.replace('.pkl', '_results.csv')}")
 
 
 def main():
